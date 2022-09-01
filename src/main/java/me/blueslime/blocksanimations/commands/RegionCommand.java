@@ -179,7 +179,7 @@ public class RegionCommand implements SlimeCommand {
 
                         for (Block block : list) {
                             if (block.getType() != Material.AIR) {
-                                if (includeData) {
+                                if (!includeData) {
                                     blockList.add(
                                             block.getType() + ":"  + block.getType().getId() + ", " +
                                                     LocationSerializer.toString(

@@ -4,3 +4,6 @@ main: me.blueslime.blocksanimations.BlocksAnimations
 api-version: 1.13
 authors: [ JustJustin ]
 description: Make animations with minecraft blocks in specified regions
+commands:
+  banimation:
+    description: Plugin Main Command
