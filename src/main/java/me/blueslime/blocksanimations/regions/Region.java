@@ -41,7 +41,7 @@ public class Region {
         load(configuration);
     }
 
-    private void load(ConfigurationHandler configuration) {
+    public void load(ConfigurationHandler configuration) {
         blockMap.clear();
 
         for (String key : configuration.getContent("regions." + name + ".area-templates", false)) {
@@ -98,6 +98,10 @@ public class Region {
 
     public void start() {
         cancel();
+
+        load(
+                plugin.getConfigurationHandler(SlimeFile.BLOCKS)
+        );
 
         runnable = new RegionRunnable(this);
 
