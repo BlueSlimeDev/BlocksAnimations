@@ -50,7 +50,10 @@ public class BlocksAnimations extends JavaPlugin implements SlimePlugin<JavaPlug
         this.regionStorage = new RegionStorage(this);
 
         this.animationLs = new AnimationWandListener(
-                getConfigurationHandler(SlimeFile.SETTINGS)
+                this,
+                getConfigurationHandler(
+                        SlimeFile.SETTINGS
+                )
         );
 
         this.locationStorage = new LocationStorage();
