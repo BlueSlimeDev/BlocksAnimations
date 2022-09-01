@@ -69,6 +69,8 @@ public class Region {
                 bMap.put(
                         LocationSerializer.fromString(
                                 blocks.replace(split[0] + ", ", "")
+                                        .replace(split[0] + " ,", "")
+                                        .replace(split[0] + ",", "")
                         ),
                         material.get().parseItem()
                 );

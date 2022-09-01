@@ -8,7 +8,7 @@
 regions:
   example:
     # Runnable start
-    start-runnable-automatically: true
+    start-runnable-automatically: false
     # Update Delay, 20L by default
     update-delay: "20L"
     # Please NEVER edit the template serializer!

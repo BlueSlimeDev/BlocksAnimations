@@ -13,7 +13,7 @@ messages:
     started: "&eAnimation %id% has been started!"
     paused: "&eAnimation %id% has been paused!"
   area-template:
-    create: "&aArea Template in region %id% has been created with the number %area-id%"
+    create: "&aArea Template in region %id% has been created with the number %area-id% with %blocks% block(s)"
     remove: "&aArea Template in region %id% with id %area-id% has been removed!"
     edited: "&aArea Template in region %id% with id %area-id% has been edited successfully!"
   plugin:

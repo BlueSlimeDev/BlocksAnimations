@@ -1,5 +1,6 @@
 package me.blueslime.blocksanimations.commands;
 
+import com.cryptomorin.xseries.XMaterial;
 import dev.mruniverse.slimelib.commands.command.Command;
 import dev.mruniverse.slimelib.commands.command.SlimeCommand;
 import dev.mruniverse.slimelib.file.configuration.ConfigurationHandler;
@@ -8,9 +9,14 @@ import dev.mruniverse.slimelib.source.player.SlimePlayer;
 import me.blueslime.blocksanimations.BlocksAnimations;
 import me.blueslime.blocksanimations.SlimeFile;
 import me.blueslime.blocksanimations.regions.Region;
+import me.blueslime.blocksanimations.regions.area.Cuboid;
 import me.blueslime.blocksanimations.utils.LocationSerializer;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
 
 @Command(
         description = "Main Command of the plugin",
@@ -30,6 +36,7 @@ public class RegionCommand implements SlimeCommand {
         return "banimation";
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void execute(SlimeSource sender, String commandLabel, String[] args) {
 
@@ -56,7 +63,7 @@ public class RegionCommand implements SlimeCommand {
         }
 
         if (args[0].equalsIgnoreCase("admin")) {
-            sender.sendColoredMessage("&6/banimation animation-wand");
+            sender.sendColoredMessage("&6/banimation animation-wand"); //Completed
             sender.sendColoredMessage("&eGet the Animation Wand Item to set pos1 and pos2");
             sender.sendColoredMessage("&6/banimation create (region-name)");
             sender.sendColoredMessage("&eCreate a region for an Animation");
@@ -138,6 +145,14 @@ public class RegionCommand implements SlimeCommand {
             );
             blocks().save();
             blocks().reload();
+
+            plugin.getStorage().getRegions().add(
+                    region,
+                    new Region(
+                            plugin,
+                            region
+                    )
+            );
             return;
         }
 
@@ -153,11 +168,59 @@ public class RegionCommand implements SlimeCommand {
                     if (blocks().contains("regions." + region + ".start-runnable-automatically")) {
                         int serializer = blocks().getInt("regions." + region + ".template-serializer", 1);
 
-                        plugin.getStorage().getRegions().add(
-                                region,
-                                new Region(
-                                        plugin,
-                                        region
+                        Cuboid cuboid = plugin.getStorage().getRegions().get(region).getCuboid();
+
+                        ArrayList<String> blockList = new ArrayList<>();
+                        ArrayList<Block> list = new ArrayList<>();
+
+                        cuboid.iterator().forEachRemaining(list::add);
+
+                        boolean includeData = XMaterial.supports(9);
+
+                        for (Block block : list) {
+                            if (block.getType() != Material.AIR) {
+                                if (includeData) {
+                                    blockList.add(
+                                            block.getType() + ":"  + block.getType().getId() + ", " +
+                                                    LocationSerializer.toString(
+                                                            block.getLocation(),
+                                                            false
+                                                    )
+                                    );
+                                } else {
+                                    blockList.add(
+                                            block.getType() + ", " +
+                                                    LocationSerializer.toString(
+                                                            block.getLocation(),
+                                                            false
+                                                    )
+                                    );
+                                }
+                            }
+                        }
+
+                        blocks().set(
+                                "regions." + region + "area-templates." + serializer,
+                                blockList
+                        );
+
+                        blocks().set("regions." + region + ".template-serializer", serializer + 1);
+
+                        blocks().save();
+
+                        blocks().reload();
+                        sender.sendColoredMessage(
+                                messages.getString(
+                                        "messages.area-template.create",
+                                        "&aArea Template in region %id% has been created with the number %area-id%"
+                                ).replace(
+                                        "%id%", region
+                                ).replace(
+                                        "%area-id%",
+                                        serializer + ""
+                                ).replace(
+                                        "%blocks%",
+                                        blockList.size() + ""
                                 )
                         );
                     }
