@@ -27,19 +27,13 @@ public class RegionStorage {
 
         for (String name : region.getContent("regions", false)) {
 
-            Region reg = new Region(
-                    plugin,
-                    name
-            );
-
             regions.add(
                     name,
-                    reg
+                    new Region(
+                            plugin,
+                            name
+                    )
             );
-
-            if (region.getStatus("regions." + name + ".start-runnable-automatically", true)) {
-                reg.start();
-            }
         }
     }
 

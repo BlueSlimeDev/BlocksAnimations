@@ -206,7 +206,7 @@ public class RegionCommand implements SlimeCommand {
                         }
 
                         blocks().set(
-                                "regions." + region + "area-templates." + serializer,
+                                "regions." + region + ".area-templates." + serializer,
                                 blockList
                         );
 
