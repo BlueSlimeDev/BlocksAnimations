@@ -257,8 +257,12 @@ public class RegionCommand implements SlimeCommand {
             for (Region region : plugin.getStorage().getRegions().getValues()) {
                 String status;
 
-                if (!region.getRunnable().isCancelled()) {
-                    status = "&aRunning";
+                if (region.getRunnable() != null) {
+                    if (!region.getRunnable().isCancelled()) {
+                        status = "&aRunning";
+                    } else {
+                        status = "&cStopped";
+                    }
                 } else {
                     status = "&cStopped";
                 }
