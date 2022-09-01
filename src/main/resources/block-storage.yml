@@ -10,7 +10,7 @@ regions:
     # Runnable start
     start-runnable-automatically: false
     # Update Delay, 20L by default
-    update-delay: "20L"
+    update-delay: "20"
     # Please NEVER edit the template serializer!
     template-serializer: 1
     # CuboID Set-up

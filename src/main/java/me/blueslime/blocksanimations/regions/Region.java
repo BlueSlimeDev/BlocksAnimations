@@ -105,7 +105,7 @@ public class Region {
                 plugin,
                 0L,
                 Long.parseLong(
-                        plugin.getConfigurationHandler(SlimeFile.BLOCKS).getString("regions." + name + ".update-delay")
+                        plugin.getConfigurationHandler(SlimeFile.BLOCKS).getString("regions." + name + ".update-delay", "20")
                 )
         );
     }
@@ -115,7 +115,7 @@ public class Region {
     }
 
     public void cancel() {
-        if (runnable != null && !runnable.isCancelled()) {
+        if (runnable != null) {
             try {
                 runnable.cancel();
             } catch (IllegalStateException ignored) {}
