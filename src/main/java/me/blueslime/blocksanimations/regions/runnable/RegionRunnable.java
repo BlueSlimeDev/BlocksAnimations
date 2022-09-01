@@ -20,7 +20,7 @@ public class RegionRunnable extends BukkitRunnable {
     public RegionRunnable(Region region) {
         this.region = region;
 
-        region.getCuboid().iterator().forEachRemaining(blockMap::add);
+        blockMap.addAll(region.getCuboid().blocks());
     }
 
     @Override

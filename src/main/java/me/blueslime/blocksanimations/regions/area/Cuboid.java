@@ -2,6 +2,7 @@ package me.blueslime.blocksanimations.regions.area;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -40,7 +41,7 @@ public class Cuboid {
         this.world = point1.getWorld();
     }
 
-    public Iterator<Block> iterator() {
+    public List<Block> blocks() {
         final ArrayList<Block> blockList = new ArrayList<>(this.getTotalBlockSize());
         for (int x = this.xMin; x <= this.xMax; ++x) {
             for (int y = this.yMin; y <= this.yMax; ++y) {
@@ -50,7 +51,7 @@ public class Cuboid {
                 }
             }
         }
-        return blockList.iterator();
+        return blockList;
     }
 
     public Location getCenter() {

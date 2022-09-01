@@ -180,13 +180,10 @@ public class RegionCommand implements SlimeCommand {
                         Cuboid cuboid = plugin.getStorage().getRegions().get(region).getCuboid();
 
                         ArrayList<String> blockList = new ArrayList<>();
-                        ArrayList<Block> list = new ArrayList<>();
-
-                        cuboid.iterator().forEachRemaining(list::add);
 
                         boolean includeData = XMaterial.supports(9);
 
-                        for (Block block : list) {
+                        for (Block block : cuboid.blocks()) {
                             if (block.getType() != Material.AIR) {
                                 if (!includeData) {
                                     blockList.add(
