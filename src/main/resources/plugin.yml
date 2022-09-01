@@ -1,6 +1,6 @@
-name: SlimePluginSpigot
+name: BlocksAnimation
 version: '${project.version}'
-main: me.blueslime.slimeplugin.spigot.Main
-api-version: 1.16
+main: me.blueslime.blocksanimations.BlocksAnimations
+api-version: 1.13
 authors: [ JustJustin ]
-description: SlimePlugin Template
+description: Make animations with minecraft blocks in specified regions

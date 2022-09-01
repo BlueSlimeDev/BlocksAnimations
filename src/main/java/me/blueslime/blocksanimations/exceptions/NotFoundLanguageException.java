@@ -1,4 +1,4 @@
-package me.blueslime.slimeplugin.spigot.exceptions;
+package me.blueslime.blocksanimations.exceptions;
 
 public class NotFoundLanguageException extends Exception {
 

@@ -5,9 +5,17 @@
 #
 # Created by JustJustin
 # Version: 1.0.0-SNAPSHOT
-settings:
-  # Default Languages: en, es (You can add your own language file to the lang folder
-  default-lang: en
-  animation-wand:
-    item: BEDROCK
-    name: "&eBA &aAnimation Wand"
+messages:
+  region:
+    create: "&aRegion has been created successfully!"
+    removed: "&aRegion has been removed!"
+  animation:
+    started: "&eAnimation %id% has been started!"
+    paused: "&eAnimation %id% has been paused!"
+  area-template:
+    create: "&aArea Template in region %id% has been created with the number %area-id%"
+    remove: "&aArea Template in region %id% with id %area-id% has been removed!"
+    edited: "&aArea Template in region %id% with id %area-id% has been edited successfully!"
+  plugin:
+    reload: "&aThe plugin has been reloaded correctly in <ms>ms"
+    permission-error: "&cYou don't have permissions to execute this command!"

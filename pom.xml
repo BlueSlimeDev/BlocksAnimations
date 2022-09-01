@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>me.blueslime.slimeplugin.spigot</groupId>
-    <artifactId>Main</artifactId>
+    <groupId>me.blueslime.blocksanimations</groupId>
+    <artifactId>BlocksAnimations</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>SlimePluginSpigot</name>
+    <name>BlocksAnimations</name>
 
-    <description>SlimePlugin Template</description>
+    <description>Make animations with minecraft blocks in specified regions</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -43,6 +43,30 @@
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>com.cryptomorin.xseries</pattern>
+                            <shadedPattern>me.blueslime.blocksanimations.xseries</shadedPattern>
+                        </relocation>
+                    </relocations>
+
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+
+                            <excludes>
+                                <exclude>com/cryptomorin/xseries/XBiome*</exclude>}
+                                <exclude>com/cryptomorin/xseries/NoteBlockMusic*</exclude>
+                                <exclude>com/cryptomorin/xseries/XBlock*</exclude>
+                                <exclude>com/cryptomorin/xseries/XEntity*</exclude>
+                                <exclude>com/cryptomorin/xseries/XPotion*</exclude>
+                                <exclude>com/cryptomorin/xseries/XTag*</exclude>
+                                <exclude>com/cryptomorin/xseries/XItemStack*</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
             </plugin>
         </plugins>
         <resources>
@@ -78,9 +102,15 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.cryptomorin</groupId>
+            <artifactId>XSeries</artifactId>
+            <version>9.0.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.MrUniverse44</groupId>
             <artifactId>SlimeLib</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.7</version>
         </dependency>
     </dependencies>
 </project>

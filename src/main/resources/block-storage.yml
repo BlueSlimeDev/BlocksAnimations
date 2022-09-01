@@ -5,9 +5,21 @@
 #
 # Created by JustJustin
 # Version: 1.0.0-SNAPSHOT
-settings:
-  # Default Languages: en, es (You can add your own language file to the lang folder
-  default-lang: en
-  animation-wand:
-    item: BEDROCK
-    name: "&eBA &aAnimation Wand"
+regions:
+  example:
+    # Runnable start
+    start-runnable-automatically: true
+    # Update Delay, 20L by default
+    update-delay: "20L"
+    # Please NEVER edit the template serializer!
+    template-serializer: 1
+    # CuboID Set-up
+    cuboid:
+      location-1: "world, x, y, z"
+      location-2: "world, x, y, z"
+    # Templates of Block-Storage in order
+    area-templates:
+      '1':
+        - "BEDROCK, world, x, y, z"
+      '2':
+        - "AIR, world, x, y ,z"

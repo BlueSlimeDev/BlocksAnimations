@@ -5,9 +5,17 @@
 #
 # Created by JustJustin
 # Version: 1.0.0-SNAPSHOT
-settings:
-  # Default Languages: en, es (You can add your own language file to the lang folder
-  default-lang: en
-  animation-wand:
-    item: BEDROCK
-    name: "&eBA &aAnimation Wand"
+messages:
+  region:
+    create: "&aSe ha creado la region correctamente!"
+    removed: "&aSe ha eliminado la region!"
+  animation:
+    started: "&eAnimación (%id%) ha iniciado!"
+    paused: "&eAnimación (%id%) se ha pausado!"
+  area-template:
+    create: "&aTemplate de Area en la region %id% se ha creado con el ID %area-id%"
+    remove: "&aTemplate de Area en la region %id% con ID %area-id% se ha eliminado!"
+    edited: "&aTemplate de Area en la region %id% con ID %area-id% se ha editado!"
+  plugin:
+    reload: "&aEl plugin se ha recargado correctamente en <ms>ms!"
+    permission-error: "&cNo tienes permisos para hacer esto!"

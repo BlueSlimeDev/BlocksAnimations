@@ -1,9 +1,10 @@
-package me.blueslime.slimeplugin.spigot;
+package me.blueslime.blocksanimations;
 
 import dev.mruniverse.slimelib.SlimeFiles;
 import dev.mruniverse.slimelib.SlimePlatform;
 
 public enum SlimeFile implements SlimeFiles {
+    BLOCKS("block-storage.yml"),
     SETTINGS("settings.yml");
     private final boolean differentFolder;
 
