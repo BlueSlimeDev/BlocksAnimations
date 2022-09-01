@@ -7,7 +7,7 @@
 # Version: 1.0.0-SNAPSHOT
 messages:
   region:
-    create: "&aRegion has been created successfully!"
+    create: "&aRegion %id% has been created successfully!"
     removed: "&aRegion has been removed!"
   animation:
     started: "&eAnimation %id% has been started!"

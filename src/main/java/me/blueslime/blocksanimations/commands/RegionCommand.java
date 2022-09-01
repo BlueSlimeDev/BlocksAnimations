@@ -121,7 +121,7 @@ public class RegionCommand implements SlimeCommand {
 
             String region = args[1];
 
-            if (blocks().contains("regions." + region + ".start-runnable-automatically")) {
+            if (blocks().contains("regions." + region)) {
                 sender.sendColoredMessage("&cThis region is already created!");
                 return;
             }
@@ -145,6 +145,15 @@ public class RegionCommand implements SlimeCommand {
             );
             blocks().save();
             blocks().reload();
+
+            sender.sendColoredMessage(
+                    messages.getString(
+                            "messages.region.create",
+                            "&aRegion %id% has been created successfully"
+                    ).replace(
+                            "%id%", region
+                    )
+            );
 
             plugin.getStorage().getRegions().add(
                     region,
