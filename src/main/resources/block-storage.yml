@@ -15,11 +15,11 @@ regions:
     template-serializer: 1
     # CuboID Set-up
     cuboid:
-      location-1: "world, x, y, z"
-      location-2: "world, x, y, z"
+      location-1: "world, 0, 0, 0"
+      location-2: "world, 0, 0, 0"
     # Templates of Block-Storage in order
     area-templates:
       '1':
-        - "BEDROCK, world, x, y, z"
+        - "BEDROCK, world, 0, 0, 0"
       '2':
-        - "AIR, world, x, y ,z"
+        - "AIR, world, 0, 0 ,0"
