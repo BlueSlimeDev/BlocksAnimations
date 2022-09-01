@@ -27,6 +27,8 @@ public class RegionStorage {
 
         for (String name : region.getContent("regions", false)) {
 
+            plugin.getLogs().info("Loading region '&a" + name + "&f'");
+
             regions.add(
                     name,
                     new Region(

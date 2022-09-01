@@ -2,12 +2,15 @@ package me.blueslime.blocksanimations.regions;
 
 import com.cryptomorin.xseries.XMaterial;
 import dev.mruniverse.slimelib.file.configuration.ConfigurationHandler;
+import dev.mruniverse.slimelib.file.configuration.handlers.bukkit.BukkitConfigurationHandler;
+import dev.mruniverse.slimelib.logs.SlimeLogs;
 import me.blueslime.blocksanimations.BlocksAnimations;
 import me.blueslime.blocksanimations.SlimeFile;
 import me.blueslime.blocksanimations.regions.area.Cuboid;
 import me.blueslime.blocksanimations.regions.runnable.RegionRunnable;
 import me.blueslime.blocksanimations.utils.LocationSerializer;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
@@ -27,12 +30,18 @@ public class Region {
 
         this.plugin = plugin;
 
+        BukkitConfigurationHandler bukkitConfig = (BukkitConfigurationHandler)configuration;
+
+        FileConfiguration config = bukkitConfig.toSpecifiedConfiguration();
+
         this.cuboid = new Cuboid(
                 LocationSerializer.fromString(
-                        configuration.getString("regions." + name + ".cuboid.location-1", "world, 0, 0, 0")
+                        plugin.getServer(),
+                        config.getString("regions." + name + ".cuboid.location-1", "world, 0, 0, 0")
                 ),
                 LocationSerializer.fromString(
-                        configuration.getString("regions." + name + ".cuboid.location-2", "world, 0, 0, 0")
+                        plugin.getServer(),
+                        config.getString("regions." + name + ".cuboid.location-2", "world, 0, 0, 0")
                 )
         );
 
@@ -44,6 +53,8 @@ public class Region {
     public void load(ConfigurationHandler configuration) {
         blockMap.clear();
 
+        boolean debugMode = isDebug();
+
         for (String key : configuration.getContent("regions." + name + ".area-templates", false)) {
 
             int id = Integer.parseInt(key);
@@ -53,26 +64,65 @@ public class Region {
                     F -> new ConcurrentHashMap<>()
             );
 
+            if (debugMode) {
+                plugin.getLogs().info(
+                        "Created a new map for area-id: " + id
+                );
+            }
+
             for (String blocks : configuration.getStringList("regions." + name + ".area-templates." + id)) {
                 String[] split = blocks.replace(" ", "").split(",");
 
-                if (split.length != 4) {
+                if (debugMode) {
+                    plugin.getLogs().info(
+                            "Loading blocks for area-id: " + id
+                    );
+                }
+
+                if (split.length != 5) {
+                    if (debugMode) {
+                        plugin.getLogs().info(
+                                "An strange block has been found in area-id: " + id + ", original:" + blocks
+                        );
+                    }
                     continue;
                 }
 
                 Optional<XMaterial> material = XMaterial.matchXMaterial(split[0]);
 
                 if (!material.isPresent()) {
+                    if (debugMode) {
+                        plugin.getLogs().info(
+                                "Don't found block materials of area-id: " + id + ", cause:" + blocks
+                        );
+                    }
                     continue;
                 }
 
+                Location location = LocationSerializer.fromString(
+                        plugin.getServer(),
+                        blocks.replace(split[0] + ", ", "")
+                                .replace(split[0] + " ,", "")
+                                .replace(split[0] + ",", "")
+                );
+
+                ItemStack item = material.get().parseItem();
+
+                if (item == null) {
+                    plugin.getLogs().info("Detected null item while the plugin is trying to load");
+                    plugin.getLogs().info("the area-id: " + id + ", in region: " + name);
+                    continue;
+                }
+
+                if (debugMode) {
+                    plugin.getLogs().info(
+                            "Loaded block location: " + location.toString() + ", Block: " + item
+                    );
+                }
+
                 bMap.put(
-                        LocationSerializer.fromString(
-                                blocks.replace(split[0] + ", ", "")
-                                        .replace(split[0] + " ,", "")
-                                        .replace(split[0] + ",", "")
-                        ),
-                        material.get().parseItem()
+                        location,
+                        item
                 );
             }
 
@@ -80,8 +130,16 @@ public class Region {
 
     }
 
+    public SlimeLogs getLogs() {
+        return plugin.getLogs();
+    }
+
     public String getName() {
         return name;
+    }
+
+    public boolean isDebug() {
+        return plugin.getConfigurationHandler(SlimeFile.SETTINGS).getBoolean("settings.debug-mode", false);
     }
 
     public Cuboid getCuboid() {
@@ -103,7 +161,7 @@ public class Region {
                 plugin.getConfigurationHandler(SlimeFile.BLOCKS)
         );
 
-        runnable = new RegionRunnable(this);
+        runnable = new RegionRunnable(this, isDebug());
 
         runnable.runTaskTimer(
                 plugin,

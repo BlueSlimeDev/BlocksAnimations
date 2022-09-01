@@ -2,6 +2,7 @@ package me.blueslime.blocksanimations.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Server;
 import org.bukkit.World;
 
 import java.text.DecimalFormat;
@@ -17,7 +18,7 @@ public class LocationSerializer {
         return decimalFormat.format(value);
     }
 
-    public static Location fromString(String location) {
+    public static Location fromString(Server server, String location) {
         if (location == null) {
             return null;
         }
@@ -30,10 +31,11 @@ public class LocationSerializer {
                 double y = Double.parseDouble(text[2]);
                 double z = Double.parseDouble(text[3]);
 
-                World world = Bukkit.getWorld(text[0]);
+                World world = server.getWorld(text[0]);
 
                 if (world == null) {
                     Bukkit.getLogger().log(Level.INFO, "The plugin can't get a specified world because was detected as null");
+                    Bukkit.getLogger().log(Level.INFO, "World: " + text[0] + ", x: " + x + ", y: " + y + ", z: " + z);
                 }
                 return new Location(
                         world,

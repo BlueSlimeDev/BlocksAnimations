@@ -6,6 +6,8 @@
 # Created by JustJustin
 # Version: 1.0.0-SNAPSHOT
 settings:
+  # Toggle the debug mode, this will help the developer to find issues.
+  debug-mode: false
   # Default Languages: en, es (You can add your own language file to the lang folder
   default-lang: en
   animation-wand:
