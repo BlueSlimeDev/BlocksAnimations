@@ -164,7 +164,7 @@ public class RegionCommand implements SlimeCommand {
             }
 
             blocks().set("regions." + region + ".start-runnable-automatically", true);
-            blocks().set("regions." + region + ".update-delay", "20L");
+            blocks().set("regions." + region + ".update-delay", "20");
             blocks().set("regions." + region + ".template-serializer", 1);
             blocks().set(
                     "regions." + region + ".cuboid.location-1",
