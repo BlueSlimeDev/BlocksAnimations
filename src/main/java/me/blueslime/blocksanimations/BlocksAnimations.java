@@ -33,6 +33,8 @@ public class BlocksAnimations extends JavaPlugin implements SlimePlugin<JavaPlug
                 this
         );
 
+        logs.getPrefixes().changeMainText("&6BlocksAnimations");
+
         this.information = new SlimePluginInformation(
                 getServerType(),
                 this
