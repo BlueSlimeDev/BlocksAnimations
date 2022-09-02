@@ -7,9 +7,11 @@
 # Version: 1.0.0-SNAPSHOT
 regions:
   example:
+    # Enabled, detect and register this region, this is an example so is disabled by default
+    enabled: false
     # Runnable start
     start-runnable-automatically: false
-    # Update Delay, 20L by default
+    # Update Delay, 20 (Value in Longs, 20 Longs = 1 second) by default
     update-delay: "20"
     # Please NEVER edit the template serializer!
     template-serializer: 1

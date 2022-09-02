@@ -36,7 +36,6 @@ public class RegionCommand implements SlimeCommand {
         return "banimation";
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void execute(SlimeSource sender, String commandLabel, String[] args) {
 
@@ -63,25 +62,25 @@ public class RegionCommand implements SlimeCommand {
         }
 
         if (args[0].equalsIgnoreCase("admin")) {
-            sender.sendColoredMessage("&6/banimation animation-wand"); //Completed
+            sender.sendColoredMessage("&6/banimation animation-wand");
             sender.sendColoredMessage("&eGet the Animation Wand Item to set pos1 and pos2");
             sender.sendColoredMessage("&6/banimation create (region-name)");
             sender.sendColoredMessage("&eCreate a region for an Animation");
             sender.sendColoredMessage("&6/banimation delete (region-name)");
             sender.sendColoredMessage("&eDelete a region using the name");
-            sender.sendColoredMessage("&6/banimation area create (region-name)");
+            sender.sendColoredMessage("&6/banimation area add (region-name)");
             sender.sendColoredMessage("&eCreate a new area for an specified region");
             sender.sendColoredMessage("&6/banimation area remove (region-name) (area-id)");
             sender.sendColoredMessage("&eRemove an area from a specified region");
             sender.sendColoredMessage("&6/banimation area edit (region-name) (area-id)");
             sender.sendColoredMessage("&eEdit an specified area-id for this region");
-            sender.sendColoredMessage("&6/banimation start (region-name)"); //Completed
+            sender.sendColoredMessage("&6/banimation start (region-name)");
             sender.sendColoredMessage("&eStart a specified animation");
-            sender.sendColoredMessage("&6/banimation pause (region-name)"); //Completed
+            sender.sendColoredMessage("&6/banimation pause (region-name)");
             sender.sendColoredMessage("&ePause a specified animation");
-            sender.sendColoredMessage("&6/banimation list"); //Completed
+            sender.sendColoredMessage("&6/banimation list");
             sender.sendColoredMessage("&eCheck all Region List");
-            sender.sendColoredMessage("&6/banimation reload"); //Completed
+            sender.sendColoredMessage("&6/banimation reload");
             sender.sendColoredMessage("&eReload all the plugin");
             return;
         }
@@ -100,6 +99,44 @@ public class RegionCommand implements SlimeCommand {
             player.getInventory().addItem(
                     item
             );
+            return;
+        }
+
+        if (args[0].equalsIgnoreCase("delete")) {
+            if (args.length != 2) {
+                sender.sendColoredMessage("&aArgument Usage:&b create (name)");
+                return;
+            }
+
+            if (!sender.isPlayer()) {
+                sender.sendColoredMessage("&cThis command is only for players!");
+                return;
+            }
+
+            String region = args[1];
+
+            if (blocks().contains("regions." + region) || plugin.getStorage().getRegions().toMap().containsKey(region)) {
+                blocks().set("regions." + region, null);
+                blocks().save();
+                blocks().reload();
+
+                Region reg = plugin.getStorage().getRegions().get(region);
+
+                if (reg != null) {
+                    reg.pause();
+                    plugin.getStorage().getRegions().remove(region);
+                }
+                sender.sendColoredMessage(
+                        messages.getString(
+                                "messages.region.removed",
+                                "&aRegion %id% has been removed!"
+                        ).replace(
+                                "%id%", region
+                        )
+                );
+                return;
+            }
+            sender.sendColoredMessage("&6This region doesn't exists!");
             return;
         }
 
@@ -166,8 +203,67 @@ public class RegionCommand implements SlimeCommand {
         }
 
         if (args[0].equalsIgnoreCase("area")) {
+            if (args.length == 4) {
+                if (args[1].equalsIgnoreCase("delete")) {
+                    if (!sender.isPlayer()) {
+                        sender.sendColoredMessage("&cThis command is only for players!");
+                        return;
+                    }
+                    String region = args[2];
+
+                    int id = Integer.parseInt(args[3]);
+
+                    Region current = plugin.getStorage().getRegions().get(region);
+
+                    current.getBlockMap().remove(id);
+
+                    blocks().set("regions." + region + ".area-templates." + id, null);
+
+                    blocks().save();
+
+                    blocks().reload();
+
+                    sender.sendColoredMessage(
+                            messages.getString(
+                                    "messages.area-template.remove",
+                                    "&aArea Template in region %id% with id %area-id% has been removed!"
+                            ).replace(
+                                    "%id%", region
+                            ).replace(
+                                    "%area-id%", id + ""
+                            )
+                    );
+
+                }
+                if (args[1].equalsIgnoreCase("edit")) {
+                    if (!sender.isPlayer()) {
+                        sender.sendColoredMessage("&6This command is only for players!");
+                        return;
+                    }
+                    int id = Integer.parseInt(args[3]);
+                    sender.sendColoredMessage(
+                            messages.getString(
+                                    "messages.area-template.edited",
+                                    "&aArea Template in region %id% with id %area-id% has been edited successfully!"
+                            ).replace(
+                                    "%id%", args[2]
+                            ).replace(
+                                    "%area-id%",
+                                    id + ""
+                            ).replace(
+                                    "%blocks%",
+                                    regionArea(args[2], id) + ""
+                            )
+                    );
+
+                    blocks().save();
+
+                    blocks().reload();
+                }
+                return;
+            }
             if (args.length == 3) {
-                if (args[1].equalsIgnoreCase("create")) {
+                if (args[1].equalsIgnoreCase("add")) {
                     if (!sender.isPlayer()) {
                         sender.sendColoredMessage("&cThis command is only for players!");
                         return;
@@ -177,44 +273,6 @@ public class RegionCommand implements SlimeCommand {
                     if (blocks().contains("regions." + region + ".start-runnable-automatically")) {
                         int serializer = blocks().getInt("regions." + region + ".template-serializer", 1);
 
-                        Cuboid cuboid = plugin.getStorage().getRegions().get(region).getCuboid();
-
-                        ArrayList<String> blockList = new ArrayList<>();
-
-                        boolean includeData = XMaterial.supports(9);
-
-                        for (Block block : cuboid.blocks()) {
-                            if (block.getType() != Material.AIR) {
-                                if (!includeData) {
-                                    blockList.add(
-                                            block.getType() + ":"  + block.getType().getId() + ", " +
-                                                    LocationSerializer.toString(
-                                                            block.getLocation(),
-                                                            false
-                                                    )
-                                    );
-                                } else {
-                                    blockList.add(
-                                            block.getType() + ", " +
-                                                    LocationSerializer.toString(
-                                                            block.getLocation(),
-                                                            false
-                                                    )
-                                    );
-                                }
-                            }
-                        }
-
-                        blocks().set(
-                                "regions." + region + ".area-templates." + serializer,
-                                blockList
-                        );
-
-                        blocks().set("regions." + region + ".template-serializer", serializer + 1);
-
-                        blocks().save();
-
-                        blocks().reload();
                         sender.sendColoredMessage(
                                 messages.getString(
                                         "messages.area-template.create",
@@ -226,9 +284,15 @@ public class RegionCommand implements SlimeCommand {
                                         serializer + ""
                                 ).replace(
                                         "%blocks%",
-                                        blockList.size() + ""
+                                        regionArea(region, serializer) + ""
                                 )
                         );
+
+                        blocks().set("regions." + region + ".template-serializer", serializer + 1);
+
+                        blocks().save();
+
+                        blocks().reload();
                     }
                 }
             }
@@ -308,6 +372,44 @@ public class RegionCommand implements SlimeCommand {
         }
 
 
+    }
+
+    @SuppressWarnings("deprecation")
+    private int regionArea(String region, int serializer) {
+        Cuboid cuboid = plugin.getStorage().getRegions().get(region).getCuboid();
+
+        ArrayList<String> blockList = new ArrayList<>();
+
+        boolean includeData = XMaterial.supports(9);
+
+        for (Block block : cuboid.blocks()) {
+            if (block.getType() != Material.AIR) {
+                if (!includeData) {
+                    blockList.add(
+                            block.getType() + ":"  + block.getType().getId() + ", " +
+                                    LocationSerializer.toString(
+                                            block.getLocation(),
+                                            false
+                                    )
+                    );
+                } else {
+                    blockList.add(
+                            block.getType() + ", " +
+                                    LocationSerializer.toString(
+                                            block.getLocation(),
+                                            false
+                                    )
+                    );
+                }
+            }
+        }
+
+        blocks().set(
+                "regions." + region + ".area-templates." + serializer,
+                blockList
+        );
+
+        return blockList.size();
     }
 
     private ConfigurationHandler blocks() {

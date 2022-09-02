@@ -27,15 +27,30 @@ public class RegionStorage {
 
         for (String name : region.getContent("regions", false)) {
 
-            plugin.getLogs().info("Loading region '&a" + name + "&f'");
+            boolean enabled = region.getStatus("regions." + name + ".enabled", true);
 
-            regions.add(
-                    name,
-                    new Region(
-                            plugin,
-                            name
-                    )
-            );
+            if (enabled) {
+                plugin.getLogs().info("Loading region '&a" + name + "&f'");
+
+                boolean start = region.getStatus("regions." + name + ".start-runnable-automatically", false);
+
+                Region reg = new Region(
+                        plugin,
+                        name
+                );
+
+                regions.add(
+                        name,
+                        reg
+                );
+
+                if (start) {
+                    reg.start();
+                    plugin.getLogs().info("Starting animation of " + name);
+                }
+            } else {
+                plugin.getLogs().info("Region " + name + " will not be loaded because is disabled!");
+            }
         }
     }
 

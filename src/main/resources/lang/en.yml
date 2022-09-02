@@ -8,7 +8,7 @@
 messages:
   region:
     create: "&aRegion %id% has been created successfully!"
-    removed: "&aRegion has been removed!"
+    removed: "&aRegion %id% has been removed!"
   animation:
     started: "&eAnimation %id% has been started!"
     paused: "&eAnimation %id% has been paused!"

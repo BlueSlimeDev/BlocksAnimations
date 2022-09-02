@@ -10,6 +10,7 @@ settings:
   debug-mode: false
   # Default Languages: en, es (You can add your own language file to the lang folder
   default-lang: en
+  # This animation wand is for create the region for the animation
   animation-wand:
     item: BEDROCK
     name: "&eBA &aAnimation Wand"
