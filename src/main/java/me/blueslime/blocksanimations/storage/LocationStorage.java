@@ -36,11 +36,11 @@ public class LocationStorage {
     }
 
     public void setFirstPosition(UUID uuid, Location location) {
-        pos1.add(uuid, location);
+        pos1.toMap().put(uuid, location);
     }
 
     public void setSecondPosition(UUID uuid, Location location) {
-        pos2.add(uuid, location);
+        pos2.toMap().put(uuid, location);
     }
 
 
