@@ -5,6 +5,7 @@ import dev.mruniverse.slimelib.SlimePluginInformation;
 import dev.mruniverse.slimelib.file.configuration.ConfigurationHandler;
 import dev.mruniverse.slimelib.logs.SlimeLogger;
 import dev.mruniverse.slimelib.logs.SlimeLogs;
+import me.blueslime.blocksanimations.bstats.Metrics;
 import me.blueslime.blocksanimations.exceptions.NotFoundLanguageException;
 import me.blueslime.blocksanimations.listeners.AnimationWandListener;
 import me.blueslime.blocksanimations.loader.PluginLoader;
@@ -46,6 +47,8 @@ public class BlocksAnimations extends JavaPlugin implements SlimePlugin<JavaPlug
                 this,
                 1L
         );
+
+        new Metrics(this, 16339);
     }
 
     public void loadRegions() {
