@@ -52,11 +52,6 @@ public class RegionRunnable extends BukkitRunnable {
         }
 
         for (Block block : blockMap) {
-            if (debug) {
-                region.getLogs().debug(
-                        "For Location: " + block.getLocation() + " checking for animation block map"
-                );
-            }
             if (currentMap.containsKey(block.getLocation())) {
 
                 block.setType(
