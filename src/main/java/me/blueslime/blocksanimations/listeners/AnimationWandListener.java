@@ -5,6 +5,7 @@ import dev.mruniverse.slimelib.file.configuration.ConfigurationHandler;
 import me.blueslime.blocksanimations.BlocksAnimations;
 import me.blueslime.blocksanimations.utils.LocationSerializer;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -20,6 +21,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class AnimationWandListener implements Listener {
     private final BlocksAnimations plugin;
@@ -97,27 +99,51 @@ public class AnimationWandListener implements Listener {
                     player.getUniqueId(),
                     clickedBlock.getLocation()
             );
+
+            int size = range(player.getUniqueId());
+
+            String b;
+
+            if (size == 1) {
+                b = "block";
+            } else {
+                b = "blocks";
+            }
+
             player.sendMessage(
                     ChatColor.translateAlternateColorCodes(
                             '&',
                             "&aPos1 now is set! (" +
                                     LocationSerializer.toString(clickedBlock.getLocation(), false) +
-                                    ")"
+                                    ") (" + size + " " + b + ")"
                     )
             );
+            event.setCancelled(true);
         } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             plugin.getLocations().setSecondPosition(
                     player.getUniqueId(),
                     event.getClickedBlock().getLocation()
             );
+
+            int size = range(player.getUniqueId());
+
+            String b;
+
+            if (size == 1) {
+                b = "block";
+            } else {
+                b = "blocks";
+            }
+
             player.sendMessage(
                     ChatColor.translateAlternateColorCodes(
                             '&',
                             "&aPos2 now is set! (" +
                                     LocationSerializer.toString(clickedBlock.getLocation(), false) +
-                                    ")"
+                                    ") (" + size + " " + b + ")"
                     )
             );
+            event.setCancelled(true);
         }
     }
 
@@ -133,6 +159,36 @@ public class AnimationWandListener implements Listener {
         plugin.getLocations().remove(
                 event.getPlayer().getUniqueId()
         );
+    }
+
+    private int range(UUID uuid) {
+        return range(
+                plugin.getLocations().getFirstPosition(uuid),
+                plugin.getLocations().getSecondPosition(uuid)
+        );
+    }
+
+    private int range(Location pos1, Location pos2) {
+        if (pos1 == null || pos2 == null) {
+            return 0;
+        }
+        int xMin = Math.min(pos1.getBlockX(), pos2.getBlockX());
+        int xMax = Math.max(pos1.getBlockX(), pos2.getBlockX());
+        int yMin = Math.min(pos1.getBlockY(), pos2.getBlockY());
+        int yMax = Math.max(pos1.getBlockY(), pos2.getBlockY());
+        int zMin = Math.min(pos1.getBlockZ(), pos2.getBlockZ());
+        int zMax = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
+        int blocks = 0;
+
+        for (int x = xMin; x <= xMax; ++x) {
+            for (int y = yMin; y <= yMax; ++y) {
+                for (int z = zMin; z <= zMax; ++z) {
+                    blocks++;
+                }
+            }
+        }
+
+        return blocks;
     }
 
     public ItemStack getItem() {
