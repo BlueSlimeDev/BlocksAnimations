@@ -38,6 +38,7 @@ public class RegionStorage {
                 boolean start = region.getStatus("regions." + name + ".start-runnable-automatically", false);
 
                 Region reg = new Region(
+                        this,
                         plugin,
                         name
                 );

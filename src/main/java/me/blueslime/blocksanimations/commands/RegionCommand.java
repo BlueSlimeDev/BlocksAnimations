@@ -200,6 +200,7 @@ public class RegionCommand implements SlimeCommand {
             plugin.getStorage().getRegions().add(
                     region,
                     new Region(
+                            plugin.getStorage(),
                             plugin,
                             region
                     )

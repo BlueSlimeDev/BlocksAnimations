@@ -10,6 +10,7 @@ import me.blueslime.blocksanimations.regions.area.Cuboid;
 import me.blueslime.blocksanimations.regions.runnables.DefaultRegionRunnable;
 import me.blueslime.blocksanimations.regions.runnables.InteractRegionRunnable;
 import me.blueslime.blocksanimations.regions.runnables.RegionRunnable;
+import me.blueslime.blocksanimations.storage.RegionStorage;
 import me.blueslime.blocksanimations.utils.LocationSerializer;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -28,7 +29,7 @@ public class Region {
     private RegionType type;
 
 
-    public Region(BlocksAnimations plugin, String name) {
+    public Region(RegionStorage storage, BlocksAnimations plugin, String name) {
         ConfigurationHandler configuration = plugin.getConfigurationHandler(SlimeFile.BLOCKS);
 
         this.plugin = plugin;
@@ -55,12 +56,15 @@ public class Region {
                 "regions." + name + ".type"
         );
 
-        setInteractBlock(
-                LocationSerializer.fromString(
-                        plugin.getServer(),
-                        configuration.getString("regions." + name + ".interact-block", "world, 0, 0, 0")
-                )
-        );
+        if (type == RegionType.INTERACT) {
+            setInteractBlock(
+                    storage,
+                    LocationSerializer.fromString(
+                            plugin.getServer(),
+                            configuration.getString("regions." + name + ".interact-block", "world, 0, 0, 0")
+                    )
+            );
+        }
 
         load(configuration);
     }
@@ -69,11 +73,11 @@ public class Region {
         this.type = type;
     }
 
-    public void setInteractBlock(Location location) {
+    public void setInteractBlock(RegionStorage storage, Location location) {
         if (location == null || location.getWorld() == null || !location.isWorldLoaded()) {
             return;
         }
-        this.plugin.getStorage().getLocationMap().toMap().put(
+        storage.getLocationMap().toMap().put(
                 location,
                 name
         );
