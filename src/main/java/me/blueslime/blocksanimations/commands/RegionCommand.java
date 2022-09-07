@@ -283,6 +283,7 @@ public class RegionCommand implements SlimeCommand {
                     );
 
                     current.setInteractBlock(
+                            plugin.getStorage(),
                             block.getLocation()
                     );
                 }
