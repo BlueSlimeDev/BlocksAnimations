@@ -120,7 +120,7 @@ public class RegionCommand implements SlimeCommand {
 
             String region = args[1];
 
-            if (blocks().contains("regions." + region) || plugin.getStorage().getRegions().toMap().containsKey(region)) {
+            if (blocks().contains("regions." + region) || plugin.getStorage().getRegions().contains(region)) {
                 blocks().set("regions." + region, null);
                 blocks().save();
                 blocks().reload();
@@ -215,7 +215,7 @@ public class RegionCommand implements SlimeCommand {
 
             String region = args[1];
 
-            if (blocks().contains("regions." + region) || plugin.getStorage().getRegions().toMap().containsKey(region)) {
+            if (blocks().contains("regions." + region) || plugin.getStorage().getRegions().contains(region)) {
                 Region current = plugin.getStorage().getRegions().get(region);
 
                 if (current == null) {

@@ -27,6 +27,10 @@ public class PluginStorage<K, V> {
         return map.get(key);
     }
 
+    public boolean contains(K key) {
+        return map.containsKey(key);
+    }
+
     public List<V> getValues() {
         return new ArrayList<>(map.values());
     }

@@ -57,6 +57,12 @@ public class RegionStorage {
         }
     }
 
+    public Region fromLocationMap(Location location) {
+        return getRegions().get(
+                getLocationMap().get(location)
+        );
+    }
+
     public PluginStorage<Location, String> getLocationMap() {
         return locationMap;
     }

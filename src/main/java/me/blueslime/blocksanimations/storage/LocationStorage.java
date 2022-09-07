@@ -11,25 +11,25 @@ public class LocationStorage {
 
 
     public void remove(UUID uuid) {
-        if (pos1.toMap().containsKey(uuid) || pos2.toMap().containsKey(uuid)) {
+        if (pos1.contains(uuid) || pos2.contains(uuid)) {
             pos1.remove(uuid);
             pos2.remove(uuid);
         }
     }
 
     public boolean isCompleted(UUID uuid) {
-        return pos1.toMap().containsKey(uuid) && pos2.toMap().containsKey(uuid);
+        return pos1.contains(uuid) && pos2.contains(uuid);
     }
 
     public Location getFirstPosition(UUID uuid) {
-        if (!pos1.toMap().containsKey(uuid)) {
+        if (!pos1.contains(uuid)) {
             return null;
         }
         return pos1.get(uuid);
     }
 
     public Location getSecondPosition(UUID uuid) {
-        if (!pos2.toMap().containsKey(uuid)) {
+        if (!pos2.contains(uuid)) {
             return null;
         }
         return pos2.get(uuid);

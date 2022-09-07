@@ -3,6 +3,8 @@ package me.blueslime.blocksanimations.listeners;
 import com.cryptomorin.xseries.XMaterial;
 import dev.mruniverse.slimelib.file.configuration.ConfigurationHandler;
 import me.blueslime.blocksanimations.BlocksAnimations;
+import me.blueslime.blocksanimations.regions.Region;
+import me.blueslime.blocksanimations.regions.RegionType;
 import me.blueslime.blocksanimations.utils.LocationSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -75,6 +77,29 @@ public class AnimationWandListener implements Listener {
         );
     }
 
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        Block clickedBlock = event.getClickedBlock();
+
+        if (clickedBlock == null) {
+            return;
+        }
+
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (!plugin.getStorage().getLocationMap().contains(clickedBlock.getLocation())) {
+                return;
+            }
+            Region region = plugin.getStorage().fromLocationMap(clickedBlock.getLocation());
+
+            if (region == null) {
+                return;
+            }
+            if (region.getType() == RegionType.INTERACT && !region.isStarted()) {
+                region.start();
+            }
+        }
+    }
+
     @SuppressWarnings("deprecation")
     @EventHandler
     public void onClick(PlayerInteractEvent event) {
@@ -86,6 +111,7 @@ public class AnimationWandListener implements Listener {
         if (clickedBlock == null) {
             return;
         }
+
         if (!player.hasPermission("blocksanimation.cmd.admin")) {
             return;
         }

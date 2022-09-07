@@ -213,6 +213,17 @@ public class Region {
         cancel();
     }
 
+    public boolean isStarted() {
+        if (runnable == null) {
+            return false;
+        }
+        try {
+            return !runnable.isCancelled();
+        } catch (Exception ignored) {
+            return false;
+        }
+    }
+
     public void cancel() {
         if (runnable != null) {
             try {
