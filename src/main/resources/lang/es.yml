@@ -4,11 +4,12 @@
 #  █▄▄▄▄██▄▄▄▄▄█▄▄▄▄█▄▄▄▄▄█▄▄█▄▄█▄▄▄▄▄█▄▄█▄▄█▄▄▄██▄▄█▄▄▄█▄▄▄█▄▄▄█▄▄█▄▄██▄▄▄██▄▄▄█▄▄▄▄█▄▄▄██▄▄█▄▄▄▄▄█
 #
 # Created by JustJustin
-# Version: 1.0.0-SNAPSHOT
+# Version: 1.1.0-SNAPSHOT
 messages:
   region:
     create: "&aSe ha creado la region %id% correctamente!"
     removed: "&aSe ha eliminado la region %id%!"
+    changeType: "&aSe ha cambiado el tipo de animacion a %type-id%, usa el comando &b/banimation reload &apara ver cambios"
   animation:
     started: "&eAnimación (%id%) ha iniciado!"
     paused: "&eAnimación (%id%) se ha pausado!"

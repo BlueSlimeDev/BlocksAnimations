@@ -1,16 +1,15 @@
-package me.blueslime.blocksanimations.regions.runnable;
+package me.blueslime.blocksanimations.regions.runnables;
 
 import me.blueslime.blocksanimations.regions.Region;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public class RegionRunnable extends BukkitRunnable {
+public class InteractRegionRunnable extends RegionRunnable {
 
     private final ArrayList<Block> blockMap = new ArrayList<>();
     private final Region region;
@@ -18,7 +17,7 @@ public class RegionRunnable extends BukkitRunnable {
 
     private int current;
 
-    public RegionRunnable(Region region, boolean debug) {
+    public InteractRegionRunnable(Region region, boolean debug) {
         this.region = region;
         this.debug  = debug;
         blockMap.addAll(region.getCuboid().blocks());
@@ -35,9 +34,9 @@ public class RegionRunnable extends BukkitRunnable {
 
         if (current >= region.getBlockMap().size()) {
             if (debug) {
-                region.getLogs().debug("Restarted animation");
+                region.getLogs().debug("Stopped interact animation");
             }
-            current = 1;
+            cancel();
         }
 
 

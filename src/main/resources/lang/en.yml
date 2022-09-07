@@ -4,15 +4,17 @@
 #  █▄▄▄▄██▄▄▄▄▄█▄▄▄▄█▄▄▄▄▄█▄▄█▄▄█▄▄▄▄▄█▄▄█▄▄█▄▄▄██▄▄█▄▄▄█▄▄▄█▄▄▄█▄▄█▄▄██▄▄▄██▄▄▄█▄▄▄▄█▄▄▄██▄▄█▄▄▄▄▄█
 #
 # Created by JustJustin
-# Version: 1.0.0-SNAPSHOT
+# Version: 1.1.0-SNAPSHOT
 messages:
   region:
     create: "&aRegion %id% has been created successfully!"
     removed: "&aRegion %id% has been removed!"
+    changeType: "&aRegion Type has been changed to %type-id%, you need to use the &b/banimation reload &ato see changes"
   animation:
     started: "&eAnimation %id% has been started!"
     paused: "&eAnimation %id% has been paused!"
   area-template:
+    interact-block: "&aThe Interactive block has been set!"
     create: "&aArea Template in region %id% has been created with the number %area-id% with %blocks% block(s)"
     remove: "&aArea Template in region %id% with id %area-id% has been removed!"
     edited: "&aArea Template in region %id% with id %area-id% has been edited successfully!"

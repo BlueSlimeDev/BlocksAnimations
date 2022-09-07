@@ -9,6 +9,7 @@ import dev.mruniverse.slimelib.source.player.SlimePlayer;
 import me.blueslime.blocksanimations.BlocksAnimations;
 import me.blueslime.blocksanimations.SlimeFile;
 import me.blueslime.blocksanimations.regions.Region;
+import me.blueslime.blocksanimations.regions.RegionType;
 import me.blueslime.blocksanimations.regions.area.Cuboid;
 import me.blueslime.blocksanimations.utils.LocationSerializer;
 import org.bukkit.Material;
@@ -68,12 +69,16 @@ public class RegionCommand implements SlimeCommand {
             sender.sendColoredMessage("&eCreate a region for an Animation");
             sender.sendColoredMessage("&6/banimation delete (region-name)");
             sender.sendColoredMessage("&eDelete a region using the name");
+            sender.sendColoredMessage("&6/banimation change-type (region-name)");
+            sender.sendColoredMessage("&eChange the type of animation in the region.");
             sender.sendColoredMessage("&6/banimation area add (region-name)");
             sender.sendColoredMessage("&eCreate a new area for an specified region");
             sender.sendColoredMessage("&6/banimation area remove (region-name) (area-id)");
             sender.sendColoredMessage("&eRemove an area from a specified region");
             sender.sendColoredMessage("&6/banimation area edit (region-name) (area-id)");
             sender.sendColoredMessage("&eEdit an specified area-id for this region");
+            sender.sendColoredMessage("&6/banimation area interact-block (region-name)");
+            sender.sendColoredMessage("&eAdd an Interactive Block to a specified region");
             sender.sendColoredMessage("&6/banimation start (region-name)");
             sender.sendColoredMessage("&eStart a specified animation");
             sender.sendColoredMessage("&6/banimation pause (region-name)");
@@ -162,7 +167,7 @@ public class RegionCommand implements SlimeCommand {
                 sender.sendColoredMessage("&cThis region is already created!");
                 return;
             }
-
+            blocks().set("regions." + region + ".type", "DEFAULT");
             blocks().set("regions." + region + ".start-runnable-automatically", true);
             blocks().set("regions." + region + ".update-delay", "20");
             blocks().set("regions." + region + ".template-serializer", 1);
@@ -202,8 +207,84 @@ public class RegionCommand implements SlimeCommand {
             return;
         }
 
+        if (args[0].equalsIgnoreCase("change-type")) {
+            if (args.length != 2) {
+                sender.sendColoredMessage("&aArgument Usage:&b change-type (name)");
+                return;
+            }
+
+            String region = args[1];
+
+            if (blocks().contains("regions." + region) || plugin.getStorage().getRegions().toMap().containsKey(region)) {
+                Region current = plugin.getStorage().getRegions().get(region);
+
+                if (current == null) {
+                    return;
+                }
+
+                if (current.getType() == RegionType.INTERACT) {
+                    blocks().set("regions." + region + ".type", "DEFAULT");
+                    current.setType(RegionType.DEFAULT);
+                } else {
+                    blocks().set("regions." + region + ".type", "INTERACT");
+                    current.setType(RegionType.INTERACT);
+                }
+
+                blocks().save();
+                blocks().reload();
+
+                sender.sendColoredMessage(
+                        messages.getString(
+                                "messages.region.changeType",
+                                "&aRegion Type has been changed to %type-id%, you need to use the &b/banimation reload &ato see changes"
+                        ).replace(
+                                "%type-id%", region
+                        )
+                );
+            }
+            return;
+        }
+
         if (args[0].equalsIgnoreCase("area")) {
             if (args.length == 4) {
+                if (args[1].equalsIgnoreCase("interact-block")) {
+                    if (!sender.isPlayer()) {
+                        sender.sendColoredMessage("&cThis command is only for players!");
+                        return;
+                    }
+                    String region = args[2];
+
+                    Region current = plugin.getStorage().getRegions().get(region);
+
+                    Player player = ((SlimePlayer)sender).get();
+
+                    Block block = player.getTargetBlock(null, 7);
+
+                    if (block.getType() == Material.AIR) {
+                        sender.sendColoredMessage("&aThis block can not be air, this command range is: &b5 blocks");
+                        return;
+                    }
+
+                    blocks().set(
+                            "regions." + region + ".interact-block",
+                            LocationSerializer.toString(
+                                    block.getLocation()
+                            )
+                    );
+                    blocks().save();
+                    blocks().reload();
+
+                    sender.sendColoredMessage(
+                            messages.getString(
+                                    "messages.area-template.interact-block",
+                                    "&aThe Interactive block has been set!"
+                            )
+                    );
+
+                    current.setInteractBlock(
+                            block.getLocation()
+                    );
+                }
                 if (args[1].equalsIgnoreCase("delete")) {
                     if (!sender.isPlayer()) {
                         sender.sendColoredMessage("&cThis command is only for players!");

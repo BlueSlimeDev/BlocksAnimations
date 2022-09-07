@@ -4,9 +4,11 @@ import dev.mruniverse.slimelib.file.configuration.ConfigurationHandler;
 import me.blueslime.blocksanimations.BlocksAnimations;
 import me.blueslime.blocksanimations.SlimeFile;
 import me.blueslime.blocksanimations.regions.Region;
+import me.blueslime.blocksanimations.regions.RegionType;
+import org.bukkit.Location;
 
 public class RegionStorage {
-
+    private final PluginStorage<Location, String> locationMap = PluginStorage.initAsConcurrentHash();
     private final PluginStorage<String, Region> regions = PluginStorage.initAsConcurrentHash();
 
     private final BlocksAnimations plugin;
@@ -21,6 +23,7 @@ public class RegionStorage {
     }
 
     private void load() {
+        locationMap.clear();
         regions.clear();
 
         ConfigurationHandler region = plugin.getConfigurationHandler(SlimeFile.BLOCKS);
@@ -44,7 +47,7 @@ public class RegionStorage {
                         reg
                 );
 
-                if (start) {
+                if (start && reg.getType() != RegionType.INTERACT) {
                     reg.start();
                     plugin.getLogs().info("Starting animation of " + name);
                 }
@@ -54,6 +57,9 @@ public class RegionStorage {
         }
     }
 
+    public PluginStorage<Location, String> getLocationMap() {
+        return locationMap;
+    }
 
     public PluginStorage<String, Region> getRegions() {
         return regions;

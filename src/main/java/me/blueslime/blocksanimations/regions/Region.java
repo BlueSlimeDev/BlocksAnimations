@@ -7,7 +7,9 @@ import dev.mruniverse.slimelib.logs.SlimeLogs;
 import me.blueslime.blocksanimations.BlocksAnimations;
 import me.blueslime.blocksanimations.SlimeFile;
 import me.blueslime.blocksanimations.regions.area.Cuboid;
-import me.blueslime.blocksanimations.regions.runnable.RegionRunnable;
+import me.blueslime.blocksanimations.regions.runnables.DefaultRegionRunnable;
+import me.blueslime.blocksanimations.regions.runnables.InteractRegionRunnable;
+import me.blueslime.blocksanimations.regions.runnables.RegionRunnable;
 import me.blueslime.blocksanimations.utils.LocationSerializer;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,11 +21,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Region {
     private final Map<Integer, Map<Location, ItemStack>> blockMap = new ConcurrentHashMap<>();
+    private RegionRunnable runnable = null;
     private final BlocksAnimations plugin;
     private final Cuboid cuboid;
-
-    private RegionRunnable runnable = null;
     private final String name;
+    private RegionType type;
+
 
     public Region(BlocksAnimations plugin, String name) {
         ConfigurationHandler configuration = plugin.getConfigurationHandler(SlimeFile.BLOCKS);
@@ -47,7 +50,37 @@ public class Region {
 
         this.name   = name;
 
+        this.type   = RegionType.fromConfiguration(
+            configuration,
+                "regions." + name + ".type"
+        );
+
+        setInteractBlock(
+                LocationSerializer.fromString(
+                        plugin.getServer(),
+                        configuration.getString("regions." + name + ".interact-block", "world, 0, 0, 0")
+                )
+        );
+
         load(configuration);
+    }
+
+    public void setType(RegionType type) {
+        this.type = type;
+    }
+
+    public void setInteractBlock(Location location) {
+        if (location == null || location.getWorld() == null || !location.isWorldLoaded()) {
+            return;
+        }
+        this.plugin.getStorage().getLocationMap().toMap().put(
+                location,
+                name
+        );
+    }
+
+    public RegionType getType() {
+        return type;
     }
 
     public void load(ConfigurationHandler configuration) {
@@ -161,7 +194,11 @@ public class Region {
                 plugin.getConfigurationHandler(SlimeFile.BLOCKS)
         );
 
-        runnable = new RegionRunnable(this, isDebug());
+        if (type != RegionType.INTERACT) {
+            runnable = new DefaultRegionRunnable(this, isDebug());
+        } else {
+            runnable = new InteractRegionRunnable(this, isDebug());
+        }
 
         runnable.runTaskTimer(
                 plugin,
