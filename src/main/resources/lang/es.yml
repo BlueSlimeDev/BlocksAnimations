@@ -4,7 +4,7 @@
 #  █▄▄▄▄██▄▄▄▄▄█▄▄▄▄█▄▄▄▄▄█▄▄█▄▄█▄▄▄▄▄█▄▄█▄▄█▄▄▄██▄▄█▄▄▄█▄▄▄█▄▄▄█▄▄█▄▄██▄▄▄██▄▄▄█▄▄▄▄█▄▄▄██▄▄█▄▄▄▄▄█
 #
 # Created by JustJustin
-# Version: 1.1.0-SNAPSHOT
+# Version: 1.2.0-SNAPSHOT
 messages:
   region:
     create: "&aSe ha creado la region %id% correctamente!"

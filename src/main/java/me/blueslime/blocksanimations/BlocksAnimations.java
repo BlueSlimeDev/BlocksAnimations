@@ -12,36 +12,25 @@ import me.blueslime.blocksanimations.loader.PluginLoader;
 import me.blueslime.blocksanimations.loader.PluginLoaderDelay;
 import me.blueslime.blocksanimations.storage.LocationStorage;
 import me.blueslime.blocksanimations.storage.RegionStorage;
+import me.blueslime.blocksanimations.utils.LoaderUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BlocksAnimations extends JavaPlugin implements SlimePlugin<JavaPlugin> {
 
-    private SlimePluginInformation information;
+    private final SlimePluginInformation information = new SlimePluginInformation(getServerType(), this);
+
+    private final SlimeLogs logs = SlimeLogger.createLogs(getServerType(), this);
+
+    private final PluginLoader loader = new PluginLoader(this);
+
+    private final LocationStorage locationStorage = new LocationStorage();
 
     private AnimationWandListener animationLs;
 
-    private LocationStorage locationStorage;
-
     private RegionStorage regionStorage;
 
-    private PluginLoader loader;
-
-    private SlimeLogs logs;
-
     public void onEnable() {
-        this.logs = SlimeLogger.createLogs(
-                getServerType(),
-                this
-        );
-
-        logs.getPrefixes().changeMainText("&6BlocksAnimations");
-
-        this.information = new SlimePluginInformation(
-                getServerType(),
-                this
-        );
-
-        this.loader = new PluginLoader(this);
+        LoaderUtils.setupLogs(logs);
 
         new PluginLoaderDelay(this).runTaskLater(
                 this,
@@ -60,8 +49,6 @@ public class BlocksAnimations extends JavaPlugin implements SlimePlugin<JavaPlug
                         SlimeFile.SETTINGS
                 )
         );
-
-        this.locationStorage = new LocationStorage();
     }
 
     public ConfigurationHandler getMessages() {
