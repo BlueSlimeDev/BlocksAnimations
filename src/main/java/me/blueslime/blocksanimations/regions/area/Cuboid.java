@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import me.blueslime.blocksanimations.exceptions.RegionException;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -25,7 +27,23 @@ public class Cuboid {
     private final int zMin;
     private final int zMax;
 
-    public Cuboid(final Location point1, final Location point2) {
+    public Cuboid(final Location point1, final Location point2) throws RegionException {
+        if (point1 == null || point2 == null) {
+            xMinCentered = 0;
+            xMaxCentered = 0;
+            yMaxCentered = 0;
+            yMinCentered = 0;
+            zMinCentered = 0;
+            zMaxCentered = 0;
+            world = Bukkit.getWorlds().get(0);
+            xMin = 0;
+            xMax = 0;
+            yMin = 0;
+            yMax = 0;
+            zMin = 0;
+            zMax = 0;
+            throw new RegionException("The first or second position for this region is null!");
+        }
         this.xMin = Math.min(point1.getBlockX(), point2.getBlockX());
         this.xMax = Math.max(point1.getBlockX(), point2.getBlockX());
         this.yMin = Math.min(point1.getBlockY(), point2.getBlockY());

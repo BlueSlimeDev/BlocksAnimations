@@ -3,6 +3,7 @@ package me.blueslime.blocksanimations.storage;
 import dev.mruniverse.slimelib.file.configuration.ConfigurationHandler;
 import me.blueslime.blocksanimations.BlocksAnimations;
 import me.blueslime.blocksanimations.SlimeFile;
+import me.blueslime.blocksanimations.exceptions.RegionException;
 import me.blueslime.blocksanimations.regions.Region;
 import me.blueslime.blocksanimations.regions.RegionType;
 import org.bukkit.Location;
@@ -37,20 +38,24 @@ public class RegionStorage {
 
                 boolean start = region.getStatus("regions." + name + ".start-runnable-automatically", false);
 
-                Region reg = new Region(
-                        this,
-                        plugin,
-                        name
-                );
+                try {
+                    Region reg = new Region(
+                            this,
+                            plugin,
+                            name
+                    );
 
-                regions.add(
-                        name,
-                        reg
-                );
+                    regions.add(
+                            name,
+                            reg
+                    );
 
-                if (start && reg.getType() != RegionType.INTERACT) {
-                    reg.start();
-                    plugin.getLogs().info("Starting animation of " + name);
+                    if (start && reg.getType() != RegionType.INTERACT) {
+                        reg.start();
+                        plugin.getLogs().info("Starting animation of " + name);
+                    }
+                } catch (RegionException exception) {
+                    plugin.getLogs().error("Can't load a specified region!", exception);
                 }
             } else {
                 plugin.getLogs().info("Region " + name + " will not be loaded because is disabled!");

@@ -6,6 +6,7 @@ import dev.mruniverse.slimelib.file.configuration.handlers.bukkit.BukkitConfigur
 import dev.mruniverse.slimelib.logs.SlimeLogs;
 import me.blueslime.blocksanimations.BlocksAnimations;
 import me.blueslime.blocksanimations.SlimeFile;
+import me.blueslime.blocksanimations.exceptions.RegionException;
 import me.blueslime.blocksanimations.regions.area.Cuboid;
 import me.blueslime.blocksanimations.regions.runnables.DefaultRegionRunnable;
 import me.blueslime.blocksanimations.regions.runnables.InteractRegionRunnable;
@@ -29,7 +30,7 @@ public class Region {
     private RegionType type;
 
 
-    public Region(RegionStorage storage, BlocksAnimations plugin, String name) {
+    public Region(RegionStorage storage, BlocksAnimations plugin, String name) throws RegionException {
         ConfigurationHandler configuration = plugin.getConfigurationHandler(SlimeFile.BLOCKS);
 
         this.plugin = plugin;

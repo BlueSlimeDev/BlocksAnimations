@@ -8,10 +8,13 @@ import dev.mruniverse.slimelib.source.SlimeSource;
 import dev.mruniverse.slimelib.source.player.SlimePlayer;
 import me.blueslime.blocksanimations.BlocksAnimations;
 import me.blueslime.blocksanimations.SlimeFile;
+import me.blueslime.blocksanimations.exceptions.RegionException;
 import me.blueslime.blocksanimations.regions.Region;
 import me.blueslime.blocksanimations.regions.RegionType;
 import me.blueslime.blocksanimations.regions.area.Cuboid;
+import me.blueslime.blocksanimations.storage.LocationStorage;
 import me.blueslime.blocksanimations.utils.LocationSerializer;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -167,6 +170,22 @@ public class RegionCommand implements SlimeCommand {
                 sender.sendColoredMessage("&cThis region is already created!");
                 return;
             }
+
+            LocationStorage locations = plugin.getLocations();
+
+            Location pos1 = locations.getFirstPosition(
+                    sender.getUniqueId()
+            );
+
+            Location pos2 = locations.getSecondPosition(
+                    sender.getUniqueId()
+            );
+
+            if (pos1 == null || pos2 == null) {
+                sender.sendColoredMessage("&6You need to set the pos1 and the pos2 for create animations!");
+                return;
+            }
+
             blocks().set("regions." + region + ".type", "DEFAULT");
             blocks().set("regions." + region + ".start-runnable-automatically", true);
             blocks().set("regions." + region + ".update-delay", "20");
@@ -174,17 +193,18 @@ public class RegionCommand implements SlimeCommand {
             blocks().set(
                     "regions." + region + ".cuboid.location-1",
                     LocationSerializer.toString(
-                            plugin.getLocations().getFirstPosition(sender.getUniqueId()),
+                            pos1,
                             false
                     )
             );
             blocks().set(
                     "regions." + region + ".cuboid.location-2",
                     LocationSerializer.toString(
-                            plugin.getLocations().getSecondPosition(sender.getUniqueId()),
+                            pos2,
                             false
                     )
             );
+
             blocks().save();
             blocks().reload();
 
@@ -197,14 +217,18 @@ public class RegionCommand implements SlimeCommand {
                     )
             );
 
-            plugin.getStorage().getRegions().add(
-                    region,
-                    new Region(
-                            plugin.getStorage(),
-                            plugin,
-                            region
-                    )
-            );
+            try {
+                plugin.getStorage().getRegions().add(
+                        region,
+                        new Region(
+                                plugin.getStorage(),
+                                plugin,
+                                region
+                        )
+                );
+            } catch (RegionException e) {
+                plugin.getLogs().error("Can't create a region due to an issue found with locations!", e);
+            }
             return;
         }
 
